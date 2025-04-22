@@ -23,9 +23,9 @@ import os
 
 from Functions.warm_up_exercises import warm_up_exercise1, warm_up_exercise2, warm_up_exercise3, warm_up_exercise4
 from Functions.warm_up_exercises import warm_up_exercise5, warm_up_exercise6, warm_up_exercise7
-from Functions.plot_data import plot_data
-from Functions.compute_cost import compute_cost
-from Functions.gradient_descent import gradient_descent
+#from Functions.plot_data import plot_data
+#from Functions.compute_cost import compute_cost
+#from Functions.gradient_descent import gradient_descent
 
 
 def main():
@@ -107,7 +107,7 @@ def main():
     print('\nExercício 7: Cálculo do custo médio completo')
     print(warm_up_exercise7(X_ex4, y_ex5, theta_ex4))  # Esperado: 0.0
 
-
+'''
     input("Programa pausado. Pressione Enter para continuar...")
 
     print('Plotando os dados...')
@@ -330,6 +330,9 @@ def main():
     plt.savefig("Figures/superficie_trajetoria.svg", format='svg', bbox_inches='tight')
     plt.show()
 
+'''
 
 if __name__ == '__main__':
     main()
+    
+

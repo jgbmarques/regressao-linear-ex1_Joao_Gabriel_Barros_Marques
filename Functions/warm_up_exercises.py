@@ -11,7 +11,7 @@ def warm_up_exercise1():
 
     @return np.ndarray Identity matrix (5x5)
     """
-    return 
+    return np.identity(5)  # Cria a matriz identidade 5x5
 
 def warm_up_exercise2(m=5):
     """
@@ -23,7 +23,7 @@ def warm_up_exercise2(m=5):
     @return np.ndarray
         Vetor de shape (m, 1) com todos os valores iguais a 1.
     """
-    return 
+    return np.ones((m, 1))  # Formato (m, 1) para vetor coluna
 
 def warm_up_exercise3(x):
     """
@@ -36,13 +36,16 @@ def warm_up_exercise3(x):
         Matriz de shape (m, 2), com a primeira coluna sendo 1s (bias) e a segunda os valores de x.
     """
     # obtem o número de exemplos
-    m = 
+    m = x.shape[0]  # Número de elementos no vetor x (shape (m,))
+    
     # Garante que x é um vetor coluna usando reshape. Use np.reshape
-    x = 
+    x = x.reshape(m, 1) # Redimensiona x para (m, 1)
+    
     # Adiciona uma coluna de 1s (bias) ao vetor x. Use np.ones para criar um vetor de 1s
-    bias = 
+    bias = np.ones((m, 1))  # Vetor coluna de 1s
+    
     # Concatena a coluna de 1s (bias) com o vetor x. Use np.hstack para concatenar horizontalmente e retorne
-    return 
+    return np.hstack((bias, x))  # Resultado: matriz (m, 2)
 
 def warm_up_exercise4(X, theta):
     """
@@ -58,7 +61,7 @@ def warm_up_exercise4(X, theta):
         Vetor de predições (m,)
     """
     # retorna o resultado da multiplicação matricial entre X e θ
-    return 
+    return np.dot(X, theta)
 
 def warm_up_exercise5(predictions, y):
     """
@@ -75,7 +78,7 @@ def warm_up_exercise5(predictions, y):
     """
     # Calcula o vetor de erros quadráticos (squared errors) entre as predições e os valores reais
     # O vetor de erros quadráticos é calculado como a diferença entre as predições e os valores reais
-    return 
+    return (predictions - y) ** 2
 
 def warm_up_exercise6(errors):
     """
@@ -89,7 +92,7 @@ def warm_up_exercise6(errors):
     """
     # O custo médio é calculado como a média dos erros quadráticos
     # Obtenha usando np.mean e não esqueça de dividir por 2
-    return 
+    return np.mean(errors) / 2  # Média dos erros dividida por 2
 
 def warm_up_exercise7(X, y, theta):
     """
@@ -112,6 +115,6 @@ def warm_up_exercise7(X, y, theta):
     # 2. Calcule os erros quadráticos usando a função warm_up_exercise5
     # 3. Calcule o custo médio usando a função warm_up_exercise6
     # 4. Retorne o custo médio
-    predictions = 
-    errors = 
-    return 
+    predictions = warm_up_exercise4(X, theta)
+    errors = warm_up_exercise5(predictions, y)
+    return warm_up_exercise6(errors)

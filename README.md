@@ -95,8 +95,8 @@ regressao-linear-ex1_<SeuNome>/
 ### ✅ Opção 1: Usando Conda (recomendado)
 
 ```bash
-conda env create -f environment.yml
-conda activate regressao-linear-ex1
+conda env create -f regressao-linear-ex1.yml // environment.yml
+conda activate atv2-regressao-linear // regressao-linear-ex1  
 python regressao-linear-ex1.py
 ```
 

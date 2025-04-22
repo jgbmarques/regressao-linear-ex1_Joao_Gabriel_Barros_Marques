@@ -23,9 +23,9 @@ import os
 
 from Functions.warm_up_exercises import warm_up_exercise1, warm_up_exercise2, warm_up_exercise3, warm_up_exercise4
 from Functions.warm_up_exercises import warm_up_exercise5, warm_up_exercise6, warm_up_exercise7
-#from Functions.plot_data import plot_data
-#from Functions.compute_cost import compute_cost
-#from Functions.gradient_descent import gradient_descent
+from Functions.plot_data import plot_data
+from Functions.compute_cost import compute_cost
+from Functions.gradient_descent import gradient_descent
 
 
 def main():
@@ -60,7 +60,7 @@ def main():
 
     @return None
     """
-
+    '''
     # Garante que a pasta de figuras existe
     os.makedirs("Figures", exist_ok=True)
 
@@ -107,7 +107,7 @@ def main():
     print('\nExercício 7: Cálculo do custo médio completo')
     print(warm_up_exercise7(X_ex4, y_ex5, theta_ex4))  # Esperado: 0.0
 
-'''
+
     input("Programa pausado. Pressione Enter para continuar...")
 
     print('Plotando os dados...')
@@ -116,37 +116,39 @@ def main():
     # (em dezenas de milhar) e a segunda com o lucro (em dezenas de mil dólares).
     # Os dados são carregados usando a função np.loadtxt do NumPy.
     # A função np.loadtxt lê os dados do arquivo e os armazena em um array NumPy.
+    '''
     data = np.loadtxt('Data/ex1data1.txt', delimiter=',')
     # Separa os dados em duas variáveis: x e y
     # x contém a população da cidade (em dezenas de milhar)
     # y contém o lucro (em dezenas de mil dólares)
     # A primeira coluna de data é a população (x), a feature
     # que será usada para prever o lucro.
-    x = data[:, ]
+    x = data[:, 0]
     # A segunda coluna de data é o lucro (y), a label ou target
-    y = data[:, ]
+    y = data[:, 1]
     # Agora, obtemos o número de exemplos de treinamento (m)
-    m = 
+    m = len(y)
 
     # Plotagem dos dados
     # Utiliza a função plot_data para exibir os pontos (x, y) em um gráfico 2D.
     # A função está definida em Functions/plot_data.py
     # e foi importada no início do arquivo.
-    plot_data(, )
+    
+    plot_data(x, y)
 
-    input("Programa pausado. Pressione Enter para continuar...")
+    #input("Programa pausado. Pressione Enter para continuar...")
 
     # Preparação dos dados para o algoritmo de descida do gradiente
     # Adiciona uma coluna de 1s à matriz x para representar o termo de interceptação (bias).
     # Isso é feito com np.column_stack, combinando uma coluna de 1s com os valores de x.
     # A nova matriz x_aug terá duas colunas: a primeira com 1s e a segunda com os valores originais de x.
-    x_aug = 
+    x_aug = np.column_stack([np.ones(m), x])
 
     # Inicialização de theta como um vetor nulo (vetor de zeros)
     # Inicializa o vetor de parâmetros theta como um vetor nulo com 2 elementos (theta[0] e theta[1]).
     # O primeiro elemento representa o intercepto (bias) e o segundo o coeficiente angular (inclinação).
     # Esse vetor será ajustado durante a execução do algoritmo de descida do gradiente.
-    theta = 
+    theta = np.zeros(2)
 
     # Parâmetros da descida do gradiente
     # Define o número de iterações e a taxa de aprendizado (alpha)
@@ -158,13 +160,13 @@ def main():
     # Aqui, alpha é definido como 0.01, um valor comumente usado em problemas de regressão linear.
     # Você pode experimentar outros valores para ver como o algoritmo se comporta.
     alpha = 0.01
-
+    
     print('\nTestando a função de custo...')
     # Utiliza a função compute_cost para calcular o custo com os parâmetros iniciais (theta = [0, 0]).
     # Essa função mede o quão bem os parâmetros atuais se ajustam aos dados de treinamento.
     # Ela está definida em Functions/compute_cost.py e foi importada anteriormente.
     # Os parâmetros de entrada são a matriz x_aug (com 1s e valores de x), o vetor y (lucro) e o vetor theta (parâmetros).
-    cost = 
+    cost = compute_cost(x_aug, y, theta)
     print(f'Com theta = [0 ; 0]\nCusto calculado = {cost:.2f}')
     print('Valor esperado para o custo (aproximadamente): 32.07')
 
@@ -172,7 +174,7 @@ def main():
     # Aqui, testamos a função de custo com um valor diferente de theta ([-1, 2]).
     # Isso nos permite verificar se a função de custo está funcionando corretamente.
     # O valor de theta = [-1, 2] é um exemplo e não representa o ajuste ideal.
-    cost = 
+    cost = compute_cost(x_aug, y, np.array([-1, 2]))
     print(f'\nCom theta = [-1 ; 2]\nCusto calculado = {cost:.2f}')
     print('Valor esperado para o custo (aproximadamente): 54.24')
 
@@ -187,12 +189,12 @@ def main():
     # Após os testes, inicializamos os parâmetros theta com valores diferentes de zero.
     # theta = [8.5, 4.0] é o ponto de partida padrão. Foi estabelecido empiricamente ao olhar os gráficos.
     # Você pode experimentar outros valores para ver como o algoritmo se comporta.
-    theta = np.array([, ])
+    theta = np.array([8.5, 4.0])
     # o vetor theta, a taxa de aprendizado (alpha) e o número de iterações.
     # A função retorna os parâmetros ajustados (theta), o histórico de custos (J_history) e o histórico de theta (theta_history).
     # O histórico de custos é usado para visualizar a convergência do algoritmo.
     # O histórico de theta é usado para visualizar a trajetória do gradiente na superfície da função de custo.
-    theta, J_history, theta_history = gradient_descent(, , , , )
+    theta, J_history, theta_history = gradient_descent(x_aug, y, theta, alpha, iterations)
 
     print('Parâmetros theta encontrados pela descida do gradiente:')
     print(theta)
@@ -205,8 +207,8 @@ def main():
     plt.xlabel('Iteração')
     plt.ylabel('Custo J(θ)')
     plt.title('Convergência da Descida do Gradiente')
-    plt.savefig("Figures/convergencia_custo.png", dpi=300, bbox_inches='tight')
-    plt.savefig("Figures/convergencia_custo.svg", format='svg', bbox_inches='tight')
+    plt.savefig("Figures/convergencia_custo2.png", dpi=300, bbox_inches='tight')
+    plt.savefig("Figures/convergencia_custo2.svg", format='svg', bbox_inches='tight')
     plt.grid(True)
     plt.show()
 
@@ -275,8 +277,8 @@ def main():
     plt.title('Contorno da Função de Custo com Trajetória')
     plt.legend()
     plt.grid(True)
-    plt.savefig("Figures/contorno_trajetoria.png", dpi=300, bbox_inches='tight')
-    plt.savefig("Figures/contorno_trajetoria.svg", format='svg', bbox_inches='tight')
+    plt.savefig("Figures/contorno_trajetoria2.png", dpi=300, bbox_inches='tight')
+    plt.savefig("Figures/contorno_trajetoria2.svg", format='svg', bbox_inches='tight')
     plt.show()
 
     # 7) Superfície da função de custo com trajetória 3D melhor visualizada
@@ -326,11 +328,11 @@ def main():
     ax.set_zlabel('Custo')
     plt.title('Superfície da Função de Custo com Trajetória 3D')
     ax.legend()
-    plt.savefig("Figures/superficie_trajetoria.png", dpi=300, bbox_inches='tight')
-    plt.savefig("Figures/superficie_trajetoria.svg", format='svg', bbox_inches='tight')
+    plt.savefig("Figures/superficie_trajetoria2.png", dpi=300, bbox_inches='tight')
+    plt.savefig("Figures/superficie_trajetoria2.svg", format='svg', bbox_inches='tight')
     plt.show()
+    
 
-'''
 
 if __name__ == '__main__':
     main()

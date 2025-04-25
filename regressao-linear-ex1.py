@@ -160,7 +160,7 @@ def main():
     # Aqui, alpha é definido como 0.01, um valor comumente usado em problemas de regressão linear.
     # Você pode experimentar outros valores para ver como o algoritmo se comporta.
     alpha = 0.01
-    
+
     print('\nTestando a função de custo...')
     # Utiliza a função compute_cost para calcular o custo com os parâmetros iniciais (theta = [0, 0]).
     # Essa função mede o quão bem os parâmetros atuais se ajustam aos dados de treinamento.
@@ -332,8 +332,111 @@ def main():
     plt.savefig("Figures/superficie_trajetoria2.svg", format='svg', bbox_inches='tight')
     plt.show()
     
+    
+    input("Programa pausado. Pressione Enter para continuar...")
+    # Lembrando:
+    # x_aug -> x com o bias
+    # x -> é a poluação
+    # y -> y é o valor
+    # theta -> iniciado com [8.5, 4.0]
+    # iterations -> 1500
+    # alpha -> 0.01
+    
+    print('\nIniciando Experimentos comparativos...')
+    theta = np.array([8.5, 4.0])
+    alpha1 = 0.001
+    alpha2 = 0.01
+    alpha3 = 0.1
+    
+    print('\n1° Experimento: Variação da taxa de aprendizado')
+    theta1, J_history1, theta_history1 = gradient_descent(x_aug, y, theta, alpha1, iterations)
+    theta2, J_history2, theta_history2 = gradient_descent(x_aug, y, theta, alpha2, iterations)
+    theta3, J_history3, theta_history3 = gradient_descent(x_aug, y, theta, alpha3, iterations)
+    
+    # Gráfico das convergências da função de custo
+    plt.figure(figsize=(10, 6))
 
+    # Escala logaritmica para visualizar a divergência de alpha = 0.1
+    plt.semilogy(np.arange(1, iterations + 1), J_history1, 'b-', linewidth=2, label='α = 0.001')
+    plt.semilogy(np.arange(1, iterations + 1), J_history2, 'r-', linewidth=2, label='α = 0.01')
+    plt.semilogy(np.arange(1, iterations + 1), J_history3, 'g-', linewidth=2, label='α = 0.1')
+    plt.ylim(0, 10**7)
+    plt.xlabel('Iteração')
+    plt.ylabel('Custo J(θ) (Escala Log)')
+    plt.title('Convergência em Escala Logarítmica')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+    
+    print('\n2° Experimento: Variação dos pesos iniciais')
+    alpha = 0.01 
+    
+    np.random.seed(0)
+    theta_aleatorio = np.random.rand(2) * 10
+    np.random.seed(1)
+    theta_aleatorio2 = np.random.rand(2) * 10
+    np.random.seed(2)
+    theta_aleatorio3 = np.random.rand(2) * 10
+    
+    theta_list = np.array([
+        np.array([0, 0]),          # Manual
+        np.array([5, 5]), 
+        np.array([-5, 5]),  
+        theta_aleatorio, 
+        theta_aleatorio2, 
+        theta_aleatorio3
+    ])
+    
+    theta_1, J_history_1, theta_history_1 = gradient_descent(x_aug, y, theta_list[0], alpha, iterations)
+    theta_2, J_history_2, theta_history_2 = gradient_descent(x_aug, y, theta_list[1], alpha, iterations)
+    theta_3, J_history_3, theta_history_3 = gradient_descent(x_aug, y, theta_list[2], alpha, iterations)
+    theta_4, J_history_4, theta_history_4 = gradient_descent(x_aug, y, theta_list[3], alpha, iterations)
+    theta_5, J_history_5, theta_history_5 = gradient_descent(x_aug, y, theta_list[4], alpha, iterations)
+    theta_6, J_history_6, theta_history_6 = gradient_descent(x_aug, y, theta_list[5], alpha, iterations)
+    
+    theta0_vals = np.linspace(-6, 8, 100)
+    theta1_vals = np.linspace(-1, 8, 100)
+    j_vals = np.zeros((len(theta0_vals), len(theta1_vals)))
+    for i, t0 in enumerate(theta0_vals):
+        for j, t1 in enumerate(theta1_vals):
+            j_vals[i, j] = compute_cost(x_aug, y, np.array([t0, t1]))
+    j_vals = j_vals.T
+    
+    # Contorno da função de custo + trajetória do gradiente
+    plt.figure(figsize=(8, 5))
+    # desenha as linhas de contorno
+    cs = plt.contour(theta0_vals, theta1_vals, j_vals,
+                     levels=np.logspace(-2, 4, 20))
+    plt.clabel(cs, inline=1, fontsize=8)  # mostra valores de custo nas linhas
 
+    # sobrepõe a trajetória dos thetas
+    plt.plot(theta_history_1[:, 0], theta_history_1[:, 1],
+             'r.-', markersize=6, label=fr'$\theta = [{theta_list[0][0]:.2f}, {theta_list[0][1]:.2f}]$')
+    plt.plot(theta_history_2[:, 0], theta_history_2[:, 1],
+             'g.-', markersize=6, label=fr'$\theta = [{theta_list[1][0]:.2f}, {theta_list[1][1]:.2f}]$')
+    plt.plot(theta_history_3[:, 0], theta_history_3[:, 1],
+             'b.-', markersize=6, label=fr'$\theta = [{theta_list[2][0]:.2f}, {theta_list[2][1]:.2f}]$')
+    plt.plot(theta_history_4[:, 0], theta_history_4[:, 1],
+             'y.-', markersize=6, label=fr'$\theta = [{theta_list[3][0]:.2f}, {theta_list[3][1]:.2f}]$')
+    plt.plot(theta_history_5[:, 0], theta_history_5[:, 1],
+             'c.-', markersize=6, label=fr'$\theta = [{theta_list[4][0]:.2f}, {theta_list[4][1]:.2f}]$')
+    plt.plot(theta_history_6[:, 0], theta_history_6[:, 1],
+             'm.-', markersize=6, label=fr'$\theta = [{theta_list[5][0]:.2f}, {theta_list[5][1]:.2f}]$')
+
+    plt.xlabel(r'$\theta_0$')
+    plt.ylabel(r'$\theta_1$')
+    plt.title('Contorno da Função de Custo com Trajetória - Comparação')
+    plt.legend(
+        bbox_to_anchor=(0.9, 1), 
+        loc='upper left',
+        borderaxespad=0.1,
+        fontsize=8
+    )
+    plt.grid(True)
+    plt.savefig("Figures/contorno_trajetoria_comparacao.png", dpi=300, bbox_inches='tight')
+    plt.savefig("Figures/contorno_trajetoria_comparacao.svg", format='svg', bbox_inches='tight')
+    plt.show()
+    
 if __name__ == '__main__':
     main()
     
